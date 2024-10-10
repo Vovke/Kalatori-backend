@@ -1,5 +1,6 @@
 //! Everything related to actual interaction with blockchain
 
+use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
 use substrate_crypto_light::common::AccountId32;
@@ -7,7 +8,6 @@ use tokio::{
     sync::{mpsc, oneshot},
     time::{timeout, Duration},
 };
-use parking_lot::RwLock;
 use tokio_util::sync::CancellationToken;
 
 use crate::{
@@ -24,9 +24,9 @@ pub mod rpc;
 pub mod tracker;
 pub mod utils;
 
+use crate::definitions::api_v2::{Health, RpcInfo, ServerHealth};
 use definitions::{ChainRequest, ChainTrackerRequest, WatchAccount};
 use tracker::start_chain_watch;
-use crate::definitions::api_v2::{Health, RpcInfo, ServerHealth};
 
 /// Logging filter
 pub const MODULE: &str = module_path!();
@@ -38,7 +38,7 @@ const SHUTDOWN_TIMEOUT: Duration = Duration::from_millis(120000);
 #[derive(Clone, Debug)]
 pub struct ChainManager {
     pub tx: mpsc::Sender<ChainRequest>,
-    connected_rpcs: Arc<RwLock<Vec<RpcInfo>>>
+    connected_rpcs: Arc<RwLock<Vec<RpcInfo>>>,
 }
 
 impl ChainManager {
@@ -97,8 +97,8 @@ impl ChainManager {
                 state.interface(),
                 signer.interface(),
                 task_tracker.clone(),
-                cancellation_token.clone()
-                ,connected_rpcs.clone(),
+                cancellation_token.clone(),
+                connected_rpcs.clone(),
             );
         }
 

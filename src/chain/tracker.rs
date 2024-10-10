@@ -1,18 +1,19 @@
 //! A tracker that follows individual chain
 
-use std::{collections::HashMap, time::SystemTime};
-use std::sync::Arc;
 use frame_metadata::v15::RuntimeMetadataV15;
 use jsonrpsee::ws_client::{WsClient, WsClientBuilder};
+use parking_lot::RwLock;
 use serde_json::Value;
+use std::sync::Arc;
+use std::{collections::HashMap, time::SystemTime};
 use substrate_parser::{AsMetadata, ShortSpecs};
 use tokio::{
     sync::mpsc,
     time::{timeout, Duration},
 };
-use parking_lot::RwLock;
 use tokio_util::sync::CancellationToken;
 
+use crate::definitions::api_v2::{Health, RpcInfo};
 use crate::{
     chain::{
         definitions::{BlockHash, ChainTrackerRequest, Invoice},
@@ -29,7 +30,6 @@ use crate::{
     state::State,
     task_tracker::TaskTracker,
 };
-use crate::definitions::api_v2::{Health, RpcInfo};
 
 #[allow(clippy::too_many_lines)]
 pub fn start_chain_watch(

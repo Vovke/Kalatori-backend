@@ -4,7 +4,7 @@ use crate::{
     database::Database,
     definitions::api_v2::{
         CurrencyProperties, OrderCreateResponse, OrderInfo, OrderQuery, OrderResponse, OrderStatus,
-        ServerInfo, ServerStatus,ServerHealth,
+        ServerHealth, ServerInfo, ServerStatus,
     },
     error::{Error, OrderError},
     signer::Signer,
@@ -13,10 +13,10 @@ use crate::{
 
 use std::collections::HashMap;
 
+use crate::definitions::api_v2::{Health, RpcInfo};
 use substrate_crypto_light::common::{AccountId32, AsBase58};
 use tokio::sync::oneshot;
 use tokio_util::sync::CancellationToken;
-use crate::definitions::api_v2::{Health, RpcInfo};
 
 /// Struct to store state of daemon. If something requires cooperation of more than one component,
 /// it should go through here.
