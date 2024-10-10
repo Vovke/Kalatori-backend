@@ -1,12 +1,13 @@
 //! Everything related to actual interaction with blockchain
 
 use std::collections::HashMap;
-
+use std::sync::Arc;
 use substrate_crypto_light::common::AccountId32;
 use tokio::{
     sync::{mpsc, oneshot},
     time::{timeout, Duration},
 };
+use parking_lot::RwLock;
 use tokio_util::sync::CancellationToken;
 
 use crate::{
@@ -25,6 +26,7 @@ pub mod utils;
 
 use definitions::{ChainRequest, ChainTrackerRequest, WatchAccount};
 use tracker::start_chain_watch;
+use crate::definitions::api_v2::{Health, RpcInfo, ServerHealth};
 
 /// Logging filter
 pub const MODULE: &str = module_path!();
@@ -35,7 +37,8 @@ const SHUTDOWN_TIMEOUT: Duration = Duration::from_millis(120000);
 /// RPC server handle
 #[derive(Clone, Debug)]
 pub struct ChainManager {
-    pub tx: tokio::sync::mpsc::Sender<ChainRequest>,
+    pub tx: mpsc::Sender<ChainRequest>,
+    connected_rpcs: Arc<RwLock<Vec<RpcInfo>>>
 }
 
 impl ChainManager {
@@ -54,6 +57,8 @@ impl ChainManager {
 
         let mut currency_map = HashMap::new();
 
+        let connected_rpcs = Arc::new(RwLock::new(Vec::new()));
+
         // start network monitors
         for c in chain {
             if c.endpoints.is_empty() {
@@ -61,6 +66,17 @@ impl ChainManager {
             }
             let (chain_tx, chain_rx) = mpsc::channel(1024);
             watch_chain.insert(c.name.clone(), chain_tx.clone());
+
+            {
+                let mut connected_rpcs_guard = connected_rpcs.write();
+                for endpoint in c.endpoints.iter() {
+                    connected_rpcs_guard.push(RpcInfo {
+                        rpc_url: endpoint.clone(),
+                        chain_name: c.name.clone(),
+                        status: Health::Critical,
+                    });
+                }
+            }
 
             // this MUST assert that there are no duplicates in requested assets
             if let Some(ref a) = c.native_token {
@@ -81,7 +97,8 @@ impl ChainManager {
                 state.interface(),
                 signer.interface(),
                 task_tracker.clone(),
-                cancellation_token.clone(),
+                cancellation_token.clone()
+                ,connected_rpcs.clone(),
             );
         }
 
@@ -143,7 +160,7 @@ impl ChainManager {
                 Ok("Chain manager is shutting down".into())
             });
 
-        Ok(Self { tx })
+        Ok(Self { tx, connected_rpcs })
     }
 
     pub async fn add_invoice(
@@ -160,6 +177,10 @@ impl ChainManager {
             .await
             .map_err(|_| ChainError::MessageDropped)?;
         rx.await.map_err(|_| ChainError::MessageDropped)?
+    }
+
+    pub fn connected_rpcs(&self) -> Vec<RpcInfo> {
+        self.connected_rpcs.read().clone()
     }
 
     pub async fn reap(
