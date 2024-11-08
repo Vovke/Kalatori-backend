@@ -678,7 +678,7 @@ pub fn asset_balance_query(
             .enumerate()
         {
             if pallet.prefix.as_str() == "Assets" {
-                index_assets_in_pallet_selector = Some(index)
+                index_assets_in_pallet_selector = Some(index);
             }
             if index_assets_in_pallet_selector.is_some() {
                 break;
@@ -778,7 +778,7 @@ pub fn system_balance_query(
             .enumerate()
         {
             if pallet.prefix.as_str() == "System" {
-                index_system_in_pallet_selector = Some(index)
+                index_system_in_pallet_selector = Some(index);
             }
             if index_system_in_pallet_selector.is_some() {
                 break;
