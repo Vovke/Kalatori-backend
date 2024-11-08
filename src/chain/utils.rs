@@ -370,10 +370,8 @@ pub fn construct_batch_call(
                                     .type_to_fill
                                     .content
                             {
-                                calls_sequence.content = call_set
-                                    .iter()
-                                    .map(|call| call.0.content.clone())
-                                    .collect();
+                                calls_sequence.content =
+                                    call_set.iter().map(|call| call.0.content.clone()).collect();
                             }
                         }
                     }
@@ -679,7 +677,9 @@ pub fn asset_balance_query(
             .iter()
             .enumerate()
         {
-            if pallet.prefix.as_str() == "Assets" { index_assets_in_pallet_selector = Some(index) }
+            if pallet.prefix.as_str() == "Assets" {
+                index_assets_in_pallet_selector = Some(index)
+            }
             if index_assets_in_pallet_selector.is_some() {
                 break;
             }
@@ -777,7 +777,9 @@ pub fn system_balance_query(
             .iter()
             .enumerate()
         {
-            if pallet.prefix.as_str() == "System" { index_system_in_pallet_selector = Some(index) }
+            if pallet.prefix.as_str() == "System" {
+                index_system_in_pallet_selector = Some(index)
+            }
             if index_system_in_pallet_selector.is_some() {
                 break;
             }

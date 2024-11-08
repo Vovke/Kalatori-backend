@@ -67,12 +67,18 @@ impl ChainManager {
 
             // this MUST assert that there are no duplicates in requested assets
             if let Some(ref a) = c.native_token {
-                if currency_map.insert(a.name.clone(), c.name.clone()).is_some() {
+                if currency_map
+                    .insert(a.name.clone(), c.name.clone())
+                    .is_some()
+                {
                     return Err(Error::DuplicateCurrency(a.name.clone()));
                 }
             }
             for a in &c.asset {
-                if currency_map.insert(a.name.clone(), c.name.clone()).is_some() {
+                if currency_map
+                    .insert(a.name.clone(), c.name.clone())
+                    .is_some()
+                {
                     return Err(Error::DuplicateCurrency(a.name.clone()));
                 }
             }

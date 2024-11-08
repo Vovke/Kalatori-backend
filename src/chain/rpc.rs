@@ -206,9 +206,7 @@ pub async fn metadata(
             if let Some(meta_v15_bytes) = maybe_metadata_raw {
                 if meta_v15_bytes.starts_with(b"meta") {
                     match RuntimeMetadata::decode_all(&mut &meta_v15_bytes[4..]) {
-                        Ok(RuntimeMetadata::V15(runtime_metadata_v15)) => {
-                            Ok(runtime_metadata_v15)
-                        }
+                        Ok(RuntimeMetadata::V15(runtime_metadata_v15)) => Ok(runtime_metadata_v15),
                         Ok(_) => Err(ChainError::NoMetadataV15),
                         Err(_) => Err(ChainError::MetadataNotDecodeable),
                     }

@@ -1,7 +1,5 @@
 use crate::{
-    definitions::api_v2::{
-        InvalidParameter, OrderQuery, OrderResponse, AMOUNT, CURRENCY,
-    },
+    definitions::api_v2::{InvalidParameter, OrderQuery, OrderResponse, AMOUNT, CURRENCY},
     error::{ForceWithdrawalError, OrderError},
     state::State,
 };
