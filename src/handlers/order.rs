@@ -1,6 +1,6 @@
 use crate::{
     definitions::api_v2::{
-        InvalidParameter, OrderQuery, OrderResponse, OrderStatus, AMOUNT, CURRENCY,
+        InvalidParameter, OrderQuery, OrderResponse, AMOUNT, CURRENCY,
     },
     error::{ForceWithdrawalError, OrderError},
     state::State,
@@ -58,10 +58,10 @@ pub async fn process_order(
             .await
             .map_err(|_| OrderError::InternalError)
     } else {
-        return state
+        state
             .order_status(&order_id)
             .await
-            .map_err(|_| OrderError::InternalError);
+            .map_err(|_| OrderError::InternalError)
     }
 }
 
