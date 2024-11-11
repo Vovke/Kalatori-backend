@@ -54,7 +54,6 @@ impl Sub for Balance {
 }
 
 impl Balance {
-    #[expect(dead_code)] // TODO: remove once populated
     pub fn format(&self, decimals: api_v2::Decimals) -> f64 {
         #[expect(clippy::cast_precision_loss)]
         let float = **self as f64;

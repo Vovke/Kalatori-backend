@@ -320,9 +320,6 @@ pub enum ChainError {
 #[derive(Debug, Error)]
 #[expect(clippy::module_name_repetitions)]
 pub enum DbError {
-    #[error("currency key isn't found")]
-    CurrencyKeyNotFound,
-
     #[error("database engine isn't running")]
     DbEngineDown,
 
@@ -369,9 +366,6 @@ pub enum OrderError {
     #[error("order parameter is missing: {0:?}")]
     MissingParameter(String),
 
-    #[error("order parameter invalid: {0:?}")]
-    InvalidParameter(String),
-
     #[error("internal error is occurred")]
     InternalError,
 }
@@ -379,14 +373,8 @@ pub enum OrderError {
 #[derive(Debug, Error)]
 #[expect(clippy::module_name_repetitions)]
 pub enum ForceWithdrawalError {
-    #[error("order parameter is missing: {0:?}")]
-    MissingParameter(String),
-
     #[error("order parameter is invalid: {0:?}")]
     InvalidParameter(String),
-
-    #[error("withdrawal was failed: \"{0:?}\"")]
-    WithdrawalError(String),
 }
 
 #[derive(Debug, thiserror::Error)]
