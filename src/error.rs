@@ -409,9 +409,6 @@ pub enum UtilError {
 #[derive(Debug, Error)]
 #[expect(clippy::module_name_repetitions)]
 pub enum SignerError {
-    #[error("failed to read {0:?}")]
-    Env(String),
-
     #[error("signer is down")]
     SignerDown,
 
