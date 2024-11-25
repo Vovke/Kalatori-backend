@@ -30,7 +30,8 @@ jobs:
           CLEAN_VERSION=$(echo $VERSION | sed 's/^v//')
 
           sed -n "/^## \\[$CLEAN_VERSION\\]/,/^## \\[/p" CHANGELOG.md | sed '$d' > dist/CHANGELOG_${VERSION}.md
-          echo "\nDocker Image: \`docker pull ${{ secrets.DOCKER_USERNAME }}/kalatori:${CLEAN_VERSION}\`" >> dist/CHANGELOG_${VERSION}.md
+          echo "### 📦 Docker Image: " >> dist/CHANGELOG_${VERSION}.md
+          echo "Docker Image: \`docker pull ${{ secrets.DOCKER_USERNAME }}/kalatori:${CLEAN_VERSION}\`" >> dist/CHANGELOG_${VERSION}.md
 
           echo "Extracted changelog:"
           cat dist/CHANGELOG_${VERSION}.md
