@@ -32,11 +32,11 @@ jobs:
           CLEAN_VERSION=$(echo $VERSION | sed 's/^v//')
 
           # Extract the changelog section for the specific version
-          sed -n "/^## \\[$CLEAN_VERSION\\]/,/^## \\[/p" CHANGELOG.md | sed '$d' > dist/CHANGELOG_${CLEAN_VERSION}.md
+          sed -n "/^## \\[$CLEAN_VERSION\\]/,/^## \\[/p" CHANGELOG.md | sed '$d' > dist/CHANGELOG_${VERSION}.md
 
           # Check the result
           echo "Extracted changelog:"
-          cat dist/CHANGELOG_${CLEAN_VERSION}.md
+          cat dist/CHANGELOG_${VERSION}.md
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
